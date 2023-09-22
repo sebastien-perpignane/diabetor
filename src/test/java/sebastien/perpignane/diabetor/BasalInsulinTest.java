@@ -4,21 +4,22 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-class InsulineBasaleTest {
+class BasalInsulinTest {
 
     @Test
-    void testComputeAdaptation_allUp() {
-        var interval1 = new GlycemiaInterval(1.2, 1.5);
-        var interval2 = new GlycemiaInterval(1.4, 1.9);
-        var interval3 = new GlycemiaInterval(1.1, 1.5);
+    void testComputeAdaptation_allSignificantUp() {
+        var interval1 = new NightGlycemiaInterval(1.2, 1.5); // +0.3
+        var interval2 = new NightGlycemiaInterval(1.4, 1.9); // +0.5
+        var interval3 = new NightGlycemiaInterval(1.1, 1.5); // +0.4
         var intervals = List.of(
-                interval1, interval2, interval3
+            interval1, interval2, interval3
         );
 
-        InsulineBasale insulineBasale = new InsulineBasale();
-        int result = insulineBasale.computeAdaptation(intervals);
+        BasalInsulin basalInsulin = new BasalInsulin();
+        int result = basalInsulin.computeAdaptation(intervals);
 
         assertThat(result).isEqualTo(2);
 
@@ -26,31 +27,31 @@ class InsulineBasaleTest {
 
     @Test
     void testComputeAdaptation_allUp_notAllSignificant() {
-        var interval1 = new GlycemiaInterval(1.2, 1.3); // not significant increase
-        var interval2 = new GlycemiaInterval(1.4, 1.9);
-        var interval3 = new GlycemiaInterval(1.1, 1.5);
+        var interval1 = new NightGlycemiaInterval(1.2, 1.3); // +0.1
+        var interval2 = new NightGlycemiaInterval(1.4, 1.9); // +0.5
+        var interval3 = new NightGlycemiaInterval(1.1, 1.5); // +0.4
         var intervals = List.of(
-                interval1, interval2, interval3
+            interval1, interval2, interval3
         );
 
-        InsulineBasale insulineBasale = new InsulineBasale();
-        int result = insulineBasale.computeAdaptation(intervals);
+        BasalInsulin basalInsulin = new BasalInsulin();
+        int result = basalInsulin.computeAdaptation(intervals);
 
         assertThat(result).isZero();
 
     }
 
     @Test
-    void testComputeAdaptation_allDown() {
-        var interval1 = new GlycemiaInterval(1.5, 1.2);
-        var interval2 = new GlycemiaInterval(1.9, 1.4);
-        var interval3 = new GlycemiaInterval(1.5, 1.1);
+    void testComputeAdaptation_allSignificantDown() {
+        var interval1 = new NightGlycemiaInterval(1.5, 1.2); // -0.3
+        var interval2 = new NightGlycemiaInterval(1.9, 1.4); // -0.5
+        var interval3 = new NightGlycemiaInterval(1.5, 1.1); // -0.4
         var intervals = List.of(
                 interval1, interval2, interval3
         );
 
-        InsulineBasale insulineBasale = new InsulineBasale();
-        int result = insulineBasale.computeAdaptation(intervals);
+        BasalInsulin basalInsulin = new BasalInsulin();
+        int result = basalInsulin.computeAdaptation(intervals);
 
         assertThat(result).isEqualTo(-2);
 
@@ -58,31 +59,63 @@ class InsulineBasaleTest {
 
     @Test
     void testComputeAdaptation_allDown_notAllSignificant() {
-        var interval1 = new GlycemiaInterval(1.5, 1.2);
-        var interval2 = new GlycemiaInterval(1.9, 1.4);
-        var interval3 = new GlycemiaInterval(1.5, 1.3);
+        var interval1 = new NightGlycemiaInterval(1.5, 1.2); // -0.3
+        var interval2 = new NightGlycemiaInterval(1.9, 1.4); // -0.5
+        var interval3 = new NightGlycemiaInterval(1.5, 1.3); // -0.2
         var intervals = List.of(
-                interval1, interval2, interval3
+            interval1, interval2, interval3
         );
 
-        InsulineBasale insulineBasale = new InsulineBasale();
-        int result = insulineBasale.computeAdaptation(intervals);
+        BasalInsulin basalInsulin = new BasalInsulin();
+        int result = basalInsulin.computeAdaptation(intervals);
 
         assertThat(result).isZero();
 
     }
 
     @Test
-    void testComputeAdaptation_upAndDown() {
-        var interval1 = new GlycemiaInterval(1.5, 1.2);
-        var interval2 = new GlycemiaInterval(1.4, 1.8);
-        var interval3 = new GlycemiaInterval(1.5, 1.1);
+    void testComputeAdaptation_significantUpAndSignificantDown() {
+        var interval1 = new NightGlycemiaInterval(1.5, 1.2); // -0.3
+        var interval2 = new NightGlycemiaInterval(1.4, 1.8); // +0.4
+        var interval3 = new NightGlycemiaInterval(1.5, 1.1); // -0.4
         var intervals = List.of(
             interval1, interval2, interval3
         );
 
-        InsulineBasale insulineBasale = new InsulineBasale();
-        int result = insulineBasale.computeAdaptation(intervals);
+        BasalInsulin basalInsulin = new BasalInsulin();
+        int result = basalInsulin.computeAdaptation(intervals);
+
+        assertThat(result).isZero();
+
+    }
+
+    @Test
+    void testComputeAdaptation_noSignificantDelta() {
+        var interval1 = new NightGlycemiaInterval(1.5, 1.4); // -0.1
+        var interval2 = new NightGlycemiaInterval(1.4, 1.6); // +0.2
+        var interval3 = new NightGlycemiaInterval(1.5, 1.6); // +0.1
+        var intervals = List.of(
+                interval1, interval2, interval3
+        );
+
+        BasalInsulin basalInsulin = new BasalInsulin();
+        int result = basalInsulin.computeAdaptation(intervals);
+
+        assertThat(result).isZero();
+
+    }
+
+    @Test
+    void testComputeAdaptation_alwaysEquals() {
+        var interval1 = new NightGlycemiaInterval(1.5, 1.5); // +0
+        var interval2 = new NightGlycemiaInterval(1.4, 1.4); // +0
+        var interval3 = new NightGlycemiaInterval(1.2, 1.2); // +0
+        var intervals = List.of(
+                interval1, interval2, interval3
+        );
+
+        BasalInsulin basalInsulin = new BasalInsulin();
+        int result = basalInsulin.computeAdaptation(intervals);
 
         assertThat(result).isZero();
 
@@ -90,16 +123,16 @@ class InsulineBasaleTest {
 
     @Test
     void testComputeAdaptation_notEnoughIntervals() {
-        var interval1 = new GlycemiaInterval(1.5, 1.2);
-        var interval2 = new GlycemiaInterval(1.9, 1.4);
+        var interval1 = new NightGlycemiaInterval(1.5, 1.2);
+        var interval2 = new NightGlycemiaInterval(1.9, 1.4);
         var intervals = List.of(
             interval1, interval2
         );
 
-        InsulineBasale insulineBasale = new InsulineBasale();
+        BasalInsulin basalInsulin = new BasalInsulin();
 
         assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(
-            () -> insulineBasale.computeAdaptation(intervals)
+            () -> basalInsulin.computeAdaptation(intervals)
         );
 
     }

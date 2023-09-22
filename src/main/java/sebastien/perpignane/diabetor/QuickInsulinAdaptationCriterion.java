@@ -1,6 +1,6 @@
 package sebastien.perpignane.diabetor;
 
-public class QuickInsulinAdaptationCriteria {
+public class QuickInsulinAdaptationCriterion {
 
     private Double min = null;
 
@@ -12,14 +12,14 @@ public class QuickInsulinAdaptationCriteria {
 
     private boolean checkAcetone = false;
 
-    QuickInsulinAdaptationCriteria() {
+    QuickInsulinAdaptationCriterion() {
     }
 
-    public QuickInsulinAdaptationCriteria(Double min, Double max, int adaptation) {
+    public QuickInsulinAdaptationCriterion(Double min, Double max, int adaptation) {
         this(min, max, adaptation, false, false);
     }
 
-    public QuickInsulinAdaptationCriteria(Double min, Double max, int adaptation, boolean endOfMeal, boolean checkAcetone) {
+    public QuickInsulinAdaptationCriterion(Double min, Double max, int adaptation, boolean endOfMeal, boolean checkAcetone) {
 
         if (min== null && max == null) {
             throw new IllegalArgumentException("min or max must be defined");

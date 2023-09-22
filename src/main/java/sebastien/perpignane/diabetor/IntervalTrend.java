@@ -1,13 +1,13 @@
 package sebastien.perpignane.diabetor;
 
-public enum TendanceIntervalle {
-    HAUSSE(2),
-    BAISSE(-2),
-    STAGNANT(0);
+public enum IntervalTrend {
+    INCREASE(2),
+    DECREASE(-2),
+    STAGNATION(0);
 
     private final int adaptation;
 
-    TendanceIntervalle(int adaptation) {
+    IntervalTrend(int adaptation) {
         this.adaptation = adaptation;
     }
 

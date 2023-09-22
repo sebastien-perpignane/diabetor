@@ -1,2 +1,9 @@
-package sebastien.perpignane.diabetor;public interface QuickInsulinAdaptationCriteriaRepository {
+package sebastien.perpignane.diabetor;
+
+import java.util.List;
+
+public interface QuickInsulinAdaptationCriteriaRepository {
+
+    List<QuickInsulinAdaptationCriterion> findAll();
+
 }

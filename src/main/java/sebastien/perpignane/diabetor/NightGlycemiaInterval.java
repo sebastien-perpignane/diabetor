@@ -1,31 +1,23 @@
 package sebastien.perpignane.diabetor;
 
-public class GlycemiaInterval {
+public class NightGlycemiaInterval {
 
-    private static final double SIGNIFICANT_DELTA = Double.parseDouble(System.getProperty("significantDelta", "0.3"));
+    public static final String SIGNIFICANT_DELTA_PROPERTY = "significantDelta";
 
-    private final double beforeSleepingGlycemia;
+    private final GlycemiaInterval glycemiaInterval;
 
-    private final double wakeUpGlycemia;
-
-    private final double delta;
-
-    public GlycemiaInterval(double beforeSleepingGlycemia, double wakeUpGlycemia) {
-        this.beforeSleepingGlycemia = beforeSleepingGlycemia;
-        this.wakeUpGlycemia = wakeUpGlycemia;
-        delta = wakeUpGlycemia - beforeSleepingGlycemia;
+    public NightGlycemiaInterval(double beforeSleepingGlycemia, double wakeUpGlycemia) {
+        this.glycemiaInterval = new GlycemiaInterval(beforeSleepingGlycemia, wakeUpGlycemia);
     }
 
     public IntervalTrend getTrend() {
 
-        if (beforeSleepingGlycemia == wakeUpGlycemia) {
-            return IntervalTrend.STAGNATION;
-        }
+        double delta = glycemiaInterval.getDelta();
 
-        if (delta > SIGNIFICANT_DELTA) {
+        if (delta > getSignificantDelta()) {
             return IntervalTrend.INCREASE;
         }
-        if (delta < -SIGNIFICANT_DELTA) {
+        if (delta < -getSignificantDelta()) {
             return IntervalTrend.DECREASE;
         }
 
@@ -33,5 +25,8 @@ public class GlycemiaInterval {
 
     }
 
-}
+    private double getSignificantDelta() {
+        return Double.parseDouble(System.getProperty(SIGNIFICANT_DELTA_PROPERTY, "0.3"));
+    }
 
+}
