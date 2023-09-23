@@ -2,6 +2,7 @@ package sebastien.perpignane.diabetor;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 import static java.lang.System.in;
@@ -14,6 +15,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException, URISyntaxException {
 
+        DecimalFormat fmt = new DecimalFormat("+#;-#");
+
         out.println("Please enter glycemia:");
 
         double glycemiaBeforeMeal = Double.parseDouble(scanner.nextLine());
@@ -25,12 +28,14 @@ public class Main {
         int acetoneAdaptation = 0;
         if (adaptation.isCheckAcetone()) {
             out.println("Measure acetone");
-            acetoneAdaptation = scanner.nextInt();
+            int acetoneLevel = scanner.nextInt();
+            Acetone acetone = new Acetone(new AcetoneCriterionRepositoryJSonFileImpl());
+            acetoneAdaptation = acetone.computeAdaptation(acetoneLevel);
         }
 
         int totalAdaptation = adaptation.getAdaptation() + acetoneAdaptation;
 
-        System.out.println("Adaptation: " + totalAdaptation);
+        System.out.println("Adaptation: " + fmt.format(totalAdaptation));
 
         if (adaptation.isEndOfMeal()) {
             System.out.println("Take your insulin at the end of the meal");

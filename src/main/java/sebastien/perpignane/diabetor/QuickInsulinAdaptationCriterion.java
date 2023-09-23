@@ -12,6 +12,9 @@ public class QuickInsulinAdaptationCriterion {
 
     private boolean checkAcetone = false;
 
+    /**
+     * exists only for Jackson
+     */
     QuickInsulinAdaptationCriterion() {
     }
 
@@ -57,27 +60,27 @@ public class QuickInsulinAdaptationCriterion {
         return checkAcetone;
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused") // used by jackson
     private void setMin(Double min) {
         this.min = min;
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused") // used by jackson
     private void setMax(Double max) {
         this.max = max;
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused") // used by jackson
     private void setAdaptation(int adaptation) {
         this.adaptation = adaptation;
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused") // used by jackson
     private void setEndOfMeal(boolean endOfMeal) {
         this.endOfMeal = endOfMeal;
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused") // used by jackson
     private void setCheckAcetone(boolean checkAcetone) {
         this.checkAcetone = checkAcetone;
     }

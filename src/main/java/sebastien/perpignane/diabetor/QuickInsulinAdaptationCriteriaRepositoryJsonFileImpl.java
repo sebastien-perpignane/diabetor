@@ -15,7 +15,7 @@ public class QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl implements Qui
     private final List<QuickInsulinAdaptationCriterion> criteria;
 
     public QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl() throws URISyntaxException, IOException {
-        this("quick_insulin_intervals.json");
+        this("quick_insulin_conditions.json");
     }
 
     QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl(String jsonConfigFile) throws URISyntaxException, IOException {

@@ -10,9 +10,24 @@ import static org.assertj.core.api.Assertions.*;
 class QuickInsulinAdaptationCriteriaRepositoryJsonFileImplTest {
 
     @Test
-    void testFindAll() throws URISyntaxException, IOException {
+    void testFindAll_defaultFile() throws URISyntaxException, IOException {
 
-        String testJsonConfigFile = "quick_insulin_intervals_test.json";
+        QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl repo =
+                new QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl();
+
+        var results = repo.findAll();
+
+        // Just check that the default file is loaded and is not empty, no assumption on its content
+        assertThat(results)
+                .isNotNull()
+                .isNotEmpty();
+
+    }
+
+    @Test
+    void testFindAll_testFile() throws URISyntaxException, IOException {
+
+        String testJsonConfigFile = "quick_insulin_conditions_test.json";
 
         QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl repo =
                 new QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl(
