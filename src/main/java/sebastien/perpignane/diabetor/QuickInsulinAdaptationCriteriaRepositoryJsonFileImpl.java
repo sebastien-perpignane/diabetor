@@ -3,10 +3,7 @@ package sebastien.perpignane.diabetor;
 import com.fasterxml.jackson.jr.ob.JSON;
 import com.fasterxml.jackson.jr.ob.ValueIterator;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,21 +11,18 @@ public class QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl implements Qui
 
     private final List<QuickInsulinAdaptationCriterion> criteria;
 
-    public QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl() throws URISyntaxException, IOException {
+    public QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl() throws IOException {
         this("quick_insulin_conditions.json");
     }
 
-    QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl(String jsonConfigFile) throws URISyntaxException, IOException {
+    QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl(String jsonConfigFile) throws IOException {
+        var is = getClass().getResourceAsStream(jsonConfigFile);
 
-        URL url = getClass().getResource(jsonConfigFile);
-
-        if (url == null) {
+        if (is == null) {
             throw new IllegalStateException("Error while loading quick insulin adaptation criteria");
         }
 
-        File configFile = new File(url.toURI());
-
-        try (ValueIterator<QuickInsulinAdaptationCriterion> it = JSON.std.with(JSON.Feature.WRITE_NULL_PROPERTIES).beanSequenceFrom(QuickInsulinAdaptationCriterion.class, configFile)) {
+        try (ValueIterator<QuickInsulinAdaptationCriterion> it = JSON.std.with(JSON.Feature.WRITE_NULL_PROPERTIES).beanSequenceFrom(QuickInsulinAdaptationCriterion.class, is)) {
 
             criteria = new ArrayList<>();
 
