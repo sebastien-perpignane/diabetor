@@ -1,4 +1,4 @@
-package sebastien.perpignane.diabetor;
+package sebastien.perpignane.diabetor.quickinsulin;
 
 import java.util.List;
 

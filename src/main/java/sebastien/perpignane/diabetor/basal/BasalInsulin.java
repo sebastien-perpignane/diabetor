@@ -1,4 +1,4 @@
-package sebastien.perpignane.diabetor;
+package sebastien.perpignane.diabetor.basal;
 
 import java.util.List;
 import java.util.Set;

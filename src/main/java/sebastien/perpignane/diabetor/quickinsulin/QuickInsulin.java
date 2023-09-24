@@ -1,4 +1,4 @@
-package sebastien.perpignane.diabetor;
+package sebastien.perpignane.diabetor.quickinsulin;
 
 public class QuickInsulin {
 
@@ -8,7 +8,7 @@ public class QuickInsulin {
         this.repository = repository;
     }
 
-    QuickInsulinAdaptationCriterion computeAdaptation(double glycemia) {
+    public QuickInsulinAdaptationCriterion computeAdaptation(double glycemia) {
         return repository.findAll().stream().filter(c -> c.isIncluded(glycemia)).findFirst().orElseThrow();
     }
 

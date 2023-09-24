@@ -1,17 +1,17 @@
-package sebastien.perpignane.diabetor;
+package sebastien.perpignane.diabetor.acetone;
 
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 class AcetoneCriterionRepositoryJSonFileImplTest {
 
     @Test
-    void testFindAll_defaultFile() throws URISyntaxException, IOException {
+    void testFindAll_defaultFile() throws IOException {
 
         AcetoneCriterionRepositoryJSonFileImpl repo = new AcetoneCriterionRepositoryJSonFileImpl();
 
@@ -24,7 +24,7 @@ class AcetoneCriterionRepositoryJSonFileImplTest {
     }
 
     @Test
-    void testFindAll_testFile() throws URISyntaxException, IOException {
+    void testFindAll_testFile() throws IOException {
 
         String testConfigFile = "acetone_test.json";
 

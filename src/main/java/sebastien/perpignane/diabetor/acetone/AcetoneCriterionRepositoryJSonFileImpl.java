@@ -1,4 +1,4 @@
-package sebastien.perpignane.diabetor;
+package sebastien.perpignane.diabetor.acetone;
 
 import com.fasterxml.jackson.jr.ob.JSON;
 import com.fasterxml.jackson.jr.ob.ValueIterator;

@@ -1,4 +1,4 @@
-package sebastien.perpignane.diabetor;
+package sebastien.perpignane.diabetor.common;
 
 public class GlycemiaInterval {
 

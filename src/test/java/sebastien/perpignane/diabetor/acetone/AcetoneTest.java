@@ -1,11 +1,13 @@
-package sebastien.perpignane.diabetor;
+package sebastien.perpignane.diabetor.acetone;
 
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class AcetoneTest {
 

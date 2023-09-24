@@ -1,9 +1,9 @@
-package sebastien.perpignane.diabetor;
+package sebastien.perpignane.diabetor.common;
 
 import org.assertj.core.data.Percentage;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class GlycemiaIntervalTest {
 

@@ -1,4 +1,4 @@
-package sebastien.perpignane.diabetor;
+package sebastien.perpignane.diabetor.basal;
 
 public enum IntervalTrend {
     INCREASE(2),

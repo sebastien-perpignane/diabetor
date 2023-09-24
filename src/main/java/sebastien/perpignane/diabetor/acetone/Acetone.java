@@ -1,4 +1,4 @@
-package sebastien.perpignane.diabetor;
+package sebastien.perpignane.diabetor.acetone;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -11,7 +11,7 @@ public class Acetone {
         acetoneAdaptationByLevel = repository.findAll().stream().collect(Collectors.toMap(AcetoneCriterion::getLevel, AcetoneCriterion::getAdaptation));
     }
 
-    int computeAdaptation(int acetoneLevel) {
+    public int computeAdaptation(int acetoneLevel) {
         if (!acetoneAdaptationByLevel.containsKey(acetoneLevel)) {
             throw new IllegalArgumentException(String.format("Unknown acetone level: %d", acetoneLevel));
         }

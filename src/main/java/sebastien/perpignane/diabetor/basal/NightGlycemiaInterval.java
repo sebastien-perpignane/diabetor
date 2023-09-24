@@ -1,4 +1,6 @@
-package sebastien.perpignane.diabetor;
+package sebastien.perpignane.diabetor.basal;
+
+import sebastien.perpignane.diabetor.common.GlycemiaInterval;
 
 public class NightGlycemiaInterval {
 

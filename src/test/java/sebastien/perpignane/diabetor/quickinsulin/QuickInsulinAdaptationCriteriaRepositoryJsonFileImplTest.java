@@ -1,16 +1,16 @@
-package sebastien.perpignane.diabetor;
+package sebastien.perpignane.diabetor.quickinsulin;
 
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 class QuickInsulinAdaptationCriteriaRepositoryJsonFileImplTest {
 
     @Test
-    void testFindAll_defaultFile() throws URISyntaxException, IOException {
+    void testFindAll_defaultFile() throws IOException {
 
         QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl repo =
                 new QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl();
@@ -25,7 +25,7 @@ class QuickInsulinAdaptationCriteriaRepositoryJsonFileImplTest {
     }
 
     @Test
-    void testFindAll_testFile() throws URISyntaxException, IOException {
+    void testFindAll_testFile() throws IOException {
 
         String testJsonConfigFile = "quick_insulin_conditions_test.json";
 

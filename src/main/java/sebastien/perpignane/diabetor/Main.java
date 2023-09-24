@@ -1,7 +1,11 @@
 package sebastien.perpignane.diabetor;
 
+import sebastien.perpignane.diabetor.acetone.Acetone;
+import sebastien.perpignane.diabetor.acetone.AcetoneCriterionRepositoryJSonFileImpl;
+import sebastien.perpignane.diabetor.quickinsulin.QuickInsulin;
+import sebastien.perpignane.diabetor.quickinsulin.QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl;
+
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 import java.util.Scanner;
 
@@ -13,7 +17,7 @@ public class Main {
 
     private static final Scanner scanner = new Scanner(in);
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) throws IOException {
 
         DecimalFormat fmt = new DecimalFormat("+#;-#");
 

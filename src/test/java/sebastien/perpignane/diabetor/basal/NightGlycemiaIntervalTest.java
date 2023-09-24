@@ -1,4 +1,4 @@
-package sebastien.perpignane.diabetor;
+package sebastien.perpignane.diabetor.basal;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
