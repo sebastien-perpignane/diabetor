@@ -3,7 +3,7 @@ package sebastien.perpignane.diabetor;
 import sebastien.perpignane.diabetor.acetone.Acetone;
 import sebastien.perpignane.diabetor.acetone.AcetoneCriterionRepositoryJSonFileImpl;
 import sebastien.perpignane.diabetor.quickinsulin.QuickInsulin;
-import sebastien.perpignane.diabetor.quickinsulin.QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl;
+import sebastien.perpignane.diabetor.quickinsulin.QuickInsulinAdaptationCriteriaRepositoryJSonFileImpl;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -25,9 +25,9 @@ public class Main {
 
         double glycemiaBeforeMeal = Double.parseDouble(scanner.nextLine());
 
-        QuickInsulin quickInsulin = new QuickInsulin(new QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl());
+        QuickInsulin quickInsulin = new QuickInsulin(new QuickInsulinAdaptationCriteriaRepositoryJSonFileImpl());
 
-        var adaptation = quickInsulin.computeAdaptation(glycemiaBeforeMeal);
+        var adaptation = quickInsulin.computePunctualAdaptation(glycemiaBeforeMeal);
 
         int acetoneAdaptation = 0;
         if (adaptation.isCheckAcetone()) {

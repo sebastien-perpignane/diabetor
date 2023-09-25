@@ -8,6 +8,8 @@ public class QuickInsulinAdaptationCriterion {
 
     private int adaptation;
 
+    private boolean objective;
+
     private boolean endOfMeal = false;
 
     private boolean checkAcetone = false;
@@ -19,10 +21,10 @@ public class QuickInsulinAdaptationCriterion {
     }
 
     public QuickInsulinAdaptationCriterion(Double min, Double max, int adaptation) {
-        this(min, max, adaptation, false, false);
+        this(min, max, adaptation, false, false, false);
     }
 
-    public QuickInsulinAdaptationCriterion(Double min, Double max, int adaptation, boolean endOfMeal, boolean checkAcetone) {
+    public QuickInsulinAdaptationCriterion(Double min, Double max, int adaptation, boolean objective, boolean endOfMeal, boolean checkAcetone) {
 
         if (min== null && max == null) {
             throw new IllegalArgumentException("min or max must be defined");
@@ -30,6 +32,7 @@ public class QuickInsulinAdaptationCriterion {
         this.min = min;
         this.max = max;
         this.adaptation = adaptation;
+        this.objective = objective;
         this.endOfMeal = endOfMeal;
         this.checkAcetone = checkAcetone;
     }
@@ -76,6 +79,11 @@ public class QuickInsulinAdaptationCriterion {
     }
 
     @SuppressWarnings("unused") // used by jackson
+    private void setObjective(boolean objective) {
+        this.objective = objective;
+    }
+
+    @SuppressWarnings("unused") // used by jackson
     private void setEndOfMeal(boolean endOfMeal) {
         this.endOfMeal = endOfMeal;
     }
@@ -87,6 +95,10 @@ public class QuickInsulinAdaptationCriterion {
 
     public boolean isIncluded(Double glycemia) {
         return glycemia >= getMin() && glycemia < getMax();
+    }
+
+    public boolean isObjective() {
+        return objective;
     }
 
 }

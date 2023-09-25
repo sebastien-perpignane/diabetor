@@ -7,13 +7,13 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-class QuickInsulinAdaptationCriteriaRepositoryJsonFileImplTest {
+class QuickInsulinAdaptationCriteriaRepositoryJSonFileImplTest {
 
     @Test
     void testFindAll_defaultFile() throws IOException {
 
-        QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl repo =
-                new QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl();
+        QuickInsulinAdaptationCriteriaRepositoryJSonFileImpl repo =
+                new QuickInsulinAdaptationCriteriaRepositoryJSonFileImpl();
 
         var results = repo.findAll();
 
@@ -29,8 +29,8 @@ class QuickInsulinAdaptationCriteriaRepositoryJsonFileImplTest {
 
         String testJsonConfigFile = "quick_insulin_conditions_test.json";
 
-        QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl repo =
-                new QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl(
+        QuickInsulinAdaptationCriteriaRepositoryJSonFileImpl repo =
+                new QuickInsulinAdaptationCriteriaRepositoryJSonFileImpl(
                     testJsonConfigFile
                 );
 
@@ -41,12 +41,16 @@ class QuickInsulinAdaptationCriteriaRepositoryJsonFileImplTest {
                 .isNotEmpty()
                 .hasSize(6);
 
+        assertThat(
+            results.stream().filter(QuickInsulinAdaptationCriterion::isObjective).toList()
+        ).hasSize(1);
+
     }
 
     @Test
     void testNonExistingConfigFile() {
         assertThatExceptionOfType(IllegalStateException.class).isThrownBy(
-            () ->  new QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl("notExistsFile.json")
+            () ->  new QuickInsulinAdaptationCriteriaRepositoryJSonFileImpl("notExistsFile.json")
         );
     }
 

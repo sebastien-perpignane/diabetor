@@ -38,12 +38,13 @@ class QuickInsulinAdaptationCriterionTest {
 
     @Test
     void testFullPublicConstructor() {
-        QuickInsulinAdaptationCriterion criteria = new QuickInsulinAdaptationCriterion(0.7, 1.4, 1, true, true);
+        QuickInsulinAdaptationCriterion criteria = new QuickInsulinAdaptationCriterion(0.7, 1.4, 1, true, true, true);
 
         assertThat(criteria.getMin()).isEqualTo(0.7);
         assertThat(criteria.getMax()).isEqualTo(1.4);
 
         assertThat(criteria.getAdaptation()).isEqualTo(1);
+        assertThat(criteria.isObjective()).isTrue();
         assertThat(criteria.isCheckAcetone()).isTrue();
         assertThat(criteria.isEndOfMeal()).isTrue();
     }

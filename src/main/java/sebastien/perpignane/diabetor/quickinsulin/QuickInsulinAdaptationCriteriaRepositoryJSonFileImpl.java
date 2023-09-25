@@ -7,15 +7,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl implements QuickInsulinAdaptationCriteriaRepository {
+public class QuickInsulinAdaptationCriteriaRepositoryJSonFileImpl implements QuickInsulinAdaptationCriteriaRepository {
 
     private final List<QuickInsulinAdaptationCriterion> criteria;
 
-    public QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl() throws IOException {
+    public QuickInsulinAdaptationCriteriaRepositoryJSonFileImpl() throws IOException {
         this("quick_insulin_conditions.json");
     }
 
-    QuickInsulinAdaptationCriteriaRepositoryJsonFileImpl(String jsonConfigFile) throws IOException {
+    QuickInsulinAdaptationCriteriaRepositoryJSonFileImpl(String jsonConfigFile) throws IOException {
         var is = getClass().getResourceAsStream(jsonConfigFile);
 
         if (is == null) {
