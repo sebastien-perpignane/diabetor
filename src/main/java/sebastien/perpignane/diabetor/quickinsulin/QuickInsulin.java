@@ -38,12 +38,11 @@ public class QuickInsulin {
                         .findFirst()
                         .orElseThrow();
 
-         int quickInsulinAdaptation = quickInsulinAdaptationCriterion.getAdaptation();
-
-         int totalAdaptation = quickInsulinAdaptation + acetoneAdaptation;
+         int glycemiaAdaptation = quickInsulinAdaptationCriterion.getAdaptation();
 
         return new PunctualQuickInsulinAdaptationResult(
-            totalAdaptation,
+            glycemiaAdaptation,
+            acetoneAdaptation,
             quickInsulinAdaptationCriterion.isEndOfMeal()
         );
     }

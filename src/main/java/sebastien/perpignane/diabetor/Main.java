@@ -38,11 +38,25 @@ public class Main {
             punctualQuickInsulinAdaptationResult = quickInsulin.computePunctualAdaptation(glycemiaBeforeMeal, acetoneLevel);
         }
 
-        System.out.println("Adaptation: " + fmt.format(punctualQuickInsulinAdaptationResult.getAdaptation()));
-
+        String endOfMealMessage = "";
         if (punctualQuickInsulinAdaptationResult.isEndOfMeal()) {
-            System.out.println("Take your insulin at the end of the meal");
+            endOfMealMessage = System.lineSeparator() + "Take your insulin at the end of the meal";
         }
+
+        System.out.printf(
+            """
+            Details:
+            \tGlycemia adaptation: %s
+            \tAcetone adaptation: %s
+            
+            Adaptation: %s
+            %s
+            """,
+            fmt.format(punctualQuickInsulinAdaptationResult.getGlycemiaAdaptation()),
+            fmt.format(punctualQuickInsulinAdaptationResult.getAcetoneAdaptation()),
+            fmt.format(punctualQuickInsulinAdaptationResult.getAdaptation()),
+            endOfMealMessage
+        );
 
     }
 }
