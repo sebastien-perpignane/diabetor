@@ -1,9 +1,6 @@
 package sebastien.perpignane.diabetor;
 
-import sebastien.perpignane.diabetor.acetone.Acetone;
-import sebastien.perpignane.diabetor.acetone.AcetoneCriterionRepositoryJSonFileImpl;
-import sebastien.perpignane.diabetor.quickinsulin.QuickInsulin;
-import sebastien.perpignane.diabetor.quickinsulin.QuickInsulinAdaptationCriteriaRepositoryJSonFileImpl;
+import sebastien.perpignane.diabetor.quickinsulin.*;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -25,23 +22,25 @@ public class Main {
 
         double glycemiaBeforeMeal = Double.parseDouble(scanner.nextLine());
 
-        QuickInsulin quickInsulin = new QuickInsulin(new QuickInsulinAdaptationCriteriaRepositoryJSonFileImpl());
+        QuickInsulin quickInsulin =
+                new QuickInsulin(
+                    new QuickInsulinAdaptationCriteriaRepositoryJSonFileImpl(),
+                    new QuickInsulinAdaptationRepositoryJSonFileImpl()
+                );
 
-        var adaptation = quickInsulin.computePunctualAdaptation(glycemiaBeforeMeal);
-
-        int acetoneAdaptation = 0;
-        if (adaptation.isCheckAcetone()) {
+        PunctualQuickInsulinAdaptationResult punctualQuickInsulinAdaptationResult;
+        try {
+            punctualQuickInsulinAdaptationResult = quickInsulin.computePunctualAdaptation(glycemiaBeforeMeal);
+        }
+        catch(AcetoneLevelRequiredException qie) {
             out.println("Measure acetone");
             int acetoneLevel = scanner.nextInt();
-            Acetone acetone = new Acetone(new AcetoneCriterionRepositoryJSonFileImpl());
-            acetoneAdaptation = acetone.computeAdaptation(acetoneLevel);
+            punctualQuickInsulinAdaptationResult = quickInsulin.computePunctualAdaptation(glycemiaBeforeMeal, acetoneLevel);
         }
 
-        int totalAdaptation = adaptation.getAdaptation() + acetoneAdaptation;
+        System.out.println("Adaptation: " + fmt.format(punctualQuickInsulinAdaptationResult.getAdaptation()));
 
-        System.out.println("Adaptation: " + fmt.format(totalAdaptation));
-
-        if (adaptation.isEndOfMeal()) {
+        if (punctualQuickInsulinAdaptationResult.isEndOfMeal()) {
             System.out.println("Take your insulin at the end of the meal");
         }
 

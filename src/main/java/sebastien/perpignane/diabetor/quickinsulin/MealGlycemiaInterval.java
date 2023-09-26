@@ -2,24 +2,22 @@ package sebastien.perpignane.diabetor.quickinsulin;
 
 public class MealGlycemiaInterval {
 
-    private final IntervalTrend trend;
+    private final double glycemiaAfterMeal;
 
-    public MealGlycemiaInterval(Double glycemiaAfterMeal, QuickInsulinAdaptationCriterion objective) {
-
-        if (glycemiaAfterMeal < objective.getMin()) {
-            trend = IntervalTrend.DOWN;
-        }
-        else if (glycemiaAfterMeal > objective.getMax()) {
-            trend = IntervalTrend.UP;
-        }
-        else {
-            trend = IntervalTrend.STABLE;
-        }
-
+    public MealGlycemiaInterval(double glycemiaAfterMeal) {
+        this.glycemiaAfterMeal = glycemiaAfterMeal;
     }
 
-    public IntervalTrend getTrend() {
-        return trend;
+    public IntervalTrend getTrend(QuickInsulinAdaptationCriterion objective) {
+        if (glycemiaAfterMeal < objective.getMin()) {
+            return IntervalTrend.DOWN;
+        }
+        else if (glycemiaAfterMeal > objective.getMax()) {
+            return IntervalTrend.UP;
+        }
+        else {
+            return IntervalTrend.STABLE;
+        }
     }
 
 }

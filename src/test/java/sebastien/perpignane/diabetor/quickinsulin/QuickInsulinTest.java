@@ -1,11 +1,12 @@
 package sebastien.perpignane.diabetor.quickinsulin;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -13,47 +14,89 @@ class QuickInsulinTest {
 
     private static final List<QuickInsulinAdaptationCriterion> criteria =
             List.of(
-                new QuickInsulinAdaptationCriterion(null, 0.7, -1),
-                new QuickInsulinAdaptationCriterion(0.7, 1.4, 0),
+                new QuickInsulinAdaptationCriterion(null, 0.7, -1, false, true, false),
+                new QuickInsulinAdaptationCriterion(0.7, 1.4, 0, true, false, false),
                 new QuickInsulinAdaptationCriterion(1.4, 2.0, 1),
                 new QuickInsulinAdaptationCriterion(2.0, 2.5, 2),
                 new QuickInsulinAdaptationCriterion(2.5, 3.0, 3),
                 new QuickInsulinAdaptationCriterion(3.0, null, 4)
             );
 
-    @Test
-    void testComputeAdaptation() {
+    private static final List<QuickInsulinAdaptation> adaptations =
+            List.of(
+                new QuickInsulinAdaptation("UP", +2),
+                new QuickInsulinAdaptation("DOWN", -2),
+                new QuickInsulinAdaptation("STABLE", 0)
+            );
+    private QuickInsulin quickInsulin;
 
-        QuickInsulinAdaptationCriteriaRepository repository = mock(QuickInsulinAdaptationCriteriaRepository.class);
+    @BeforeEach
+    void setUp() {
+        QuickInsulinAdaptationCriteriaRepository adaptationCriteriaRepository = mock(QuickInsulinAdaptationCriteriaRepository.class);
+        when(adaptationCriteriaRepository.findAll()).thenReturn(criteria);
+
+        QuickInsulinAdaptationRepository adaptationRepository = mock(QuickInsulinAdaptationRepository.class);
+        when(adaptationRepository.findAll()).thenReturn(adaptations);
+
+        quickInsulin = new QuickInsulin(adaptationCriteriaRepository, adaptationRepository);
+
+    }
+
+    @Test
+    void testComputeAdaptation_inObjective() throws AcetoneLevelRequiredException, IOException {
 
         double glycemia = 0.8;
 
-        when(repository.findAll()).thenReturn(criteria);
+        PunctualQuickInsulinAdaptationResult adaptationResult = quickInsulin.computePunctualAdaptation(glycemia);
 
-        QuickInsulin quickInsulin = new QuickInsulin(repository);
+        assertThat(adaptationResult.getAdaptation()).isZero();
 
-        var result = quickInsulin.computePunctualAdaptation(glycemia);
+    }
 
-        assertThat(result).isNotNull();
+    @Test
+    void testComputeAdaptation_outOfObjective_acetoneLevelNotRequired() throws AcetoneLevelRequiredException, IOException {
 
-        assertThat(result.getAdaptation()).isZero();
+        double glycemia = 1.6;
+
+        PunctualQuickInsulinAdaptationResult adaptationResult = quickInsulin.computePunctualAdaptation(glycemia);
+
+        assertThat(adaptationResult.getAdaptation()).isEqualTo(1);
+
+    }
+
+    @Test
+    void testComputeAdaptation_outOfObjective_hypoglycemia() throws AcetoneLevelRequiredException, IOException {
+
+        double glycemia = 0.65;
+
+        PunctualQuickInsulinAdaptationResult adaptationResult = quickInsulin.computePunctualAdaptation(glycemia);
+
+        assertThat(adaptationResult.getAdaptation())
+            .isEqualTo(-1);
+        assertThat(adaptationResult.isEndOfMeal())
+            .isTrue();
+
+    }
+
+    @Test
+    void testComputeAdaptation_acetoneLevelRequired() {
+
+        double glycemia = 2.51;
+
+        assertThatExceptionOfType(QuickInsulinException.class).isThrownBy(
+            () -> quickInsulin.computePunctualAdaptation(glycemia)
+        );
 
     }
 
     @Test
     void testComputeLongTermAdaptation_noAdaptation_goodTrend() {
 
-        var objective = new QuickInsulinAdaptationCriterion(0.7, 1.4, 0);
-
         List<MealGlycemiaInterval> intervals = List.of(
-            new MealGlycemiaInterval(1.2,  objective),
-            new MealGlycemiaInterval(1.4,  objective),
-            new MealGlycemiaInterval(0.8,  objective)
+            new MealGlycemiaInterval(1.2),
+            new MealGlycemiaInterval(1.4),
+            new MealGlycemiaInterval(0.8)
         );
-
-        QuickInsulinAdaptationCriteriaRepository repository = mock(QuickInsulinAdaptationCriteriaRepository.class);
-
-        QuickInsulin quickInsulin = new QuickInsulin(repository);
 
         int longTermAdaptation = quickInsulin.computeLongTermAdaptation(intervals);
 
@@ -64,72 +107,50 @@ class QuickInsulinTest {
     @Test
     void testComputeLongTermAdaptation_noAdaptation_noTrend() {
 
-        var objective = new QuickInsulinAdaptationCriterion(0.7, 1.4, 0);
-
         List<MealGlycemiaInterval> intervals = List.of(
-                new MealGlycemiaInterval(1.6,  objective),
-                new MealGlycemiaInterval(0.6,  objective),
-                new MealGlycemiaInterval(0.8,  objective)
+                new MealGlycemiaInterval(1.6),
+                new MealGlycemiaInterval(0.6),
+                new MealGlycemiaInterval(0.8)
         );
-
-        QuickInsulinAdaptationCriteriaRepository repository = mock(QuickInsulinAdaptationCriteriaRepository.class);
-
-        QuickInsulin quickInsulin = new QuickInsulin(repository);
 
         int longTermAdaptation = quickInsulin.computeLongTermAdaptation(intervals);
 
-        assertThat(longTermAdaptation).isEqualTo(IntervalTrend.STABLE.getAdaptation());
+        assertThat(longTermAdaptation).isZero();
 
     }
 
     @Test
     void testComputeLongTermAdaptation_adaptationUp() {
 
-        var objective = new QuickInsulinAdaptationCriterion(0.7, 1.4, 0);
-
         List<MealGlycemiaInterval> intervals = List.of(
-                new MealGlycemiaInterval(1.5,  objective),
-                new MealGlycemiaInterval(1.8,  objective),
-                new MealGlycemiaInterval(1.42,  objective)
+                new MealGlycemiaInterval(1.5),
+                new MealGlycemiaInterval(1.8),
+                new MealGlycemiaInterval(1.42)
         );
-
-        QuickInsulinAdaptationCriteriaRepository repository = mock(QuickInsulinAdaptationCriteriaRepository.class);
-
-        QuickInsulin quickInsulin = new QuickInsulin(repository);
 
         int longTermAdaptation = quickInsulin.computeLongTermAdaptation(intervals);
 
-        assertThat(longTermAdaptation).isEqualTo(IntervalTrend.UP.getAdaptation());
+        assertThat(longTermAdaptation).isEqualTo(+2);
 
     }
 
     @Test
     void testComputeLongTermAdaptation_adaptationDown() {
 
-        var objective = new QuickInsulinAdaptationCriterion(0.7, 1.4, 0);
-
         List<MealGlycemiaInterval> intervals = List.of(
-                new MealGlycemiaInterval(0.65,  objective),
-                new MealGlycemiaInterval(0.60,  objective),
-                new MealGlycemiaInterval(0.59,  objective)
+                new MealGlycemiaInterval(0.65),
+                new MealGlycemiaInterval(0.60),
+                new MealGlycemiaInterval(0.59)
         );
-
-        QuickInsulinAdaptationCriteriaRepository repository = mock(QuickInsulinAdaptationCriteriaRepository.class);
-
-        QuickInsulin quickInsulin = new QuickInsulin(repository);
 
         int longTermAdaptation = quickInsulin.computeLongTermAdaptation(intervals);
 
-        assertThat(longTermAdaptation).isEqualTo(IntervalTrend.DOWN.getAdaptation());
+        assertThat(longTermAdaptation).isEqualTo(-2);
 
     }
 
     @Test
     void testComputeLongTermAdaptation_invalidArgument_nullIntervals() {
-
-        QuickInsulinAdaptationCriteriaRepository repository = mock(QuickInsulinAdaptationCriteriaRepository.class);
-
-        QuickInsulin quickInsulin = new QuickInsulin(repository);
 
         assertThatIllegalArgumentException().isThrownBy(
             () -> quickInsulin.computeLongTermAdaptation(null)
@@ -140,23 +161,16 @@ class QuickInsulinTest {
     @Test
     void testComputeLongTermAdaptation_invalidArgument_intervalsSize() {
 
-        var objective = new QuickInsulinAdaptationCriterion(0.7, 1.4, 0);
-
         List<MealGlycemiaInterval> intervals =
                 List.of(
-                    new MealGlycemiaInterval(0.65,  objective),
-                    new MealGlycemiaInterval(0.60,  objective)
+                    new MealGlycemiaInterval(0.65),
+                    new MealGlycemiaInterval(0.60)
                 );
-
-        QuickInsulinAdaptationCriteriaRepository repository = mock(QuickInsulinAdaptationCriteriaRepository.class);
-
-        QuickInsulin quickInsulin = new QuickInsulin(repository);
 
         assertThatIllegalArgumentException().isThrownBy(
             () -> quickInsulin.computeLongTermAdaptation(intervals)
         );
 
     }
-
 
 }
