@@ -75,7 +75,7 @@ For example, if you measured that you glycemia level was 1.2 then 2.4 and finall
 
 To compute this adaptation, 3 *pairs* of glycemia measures are required. 
 
-For example, if you measured that you glycemia level was 1.2 then 2.4 and finally 0.8 four hours after your last breakfasts, enter: 1.2,2.4,0.8
+For example, if you measured that you glycemia level was 1.2 before sleeping and 0.8 at wake up, enter: 1.2,0.8
 
 You will be prompted to enter a glycemia measure pair 3 times.
 
