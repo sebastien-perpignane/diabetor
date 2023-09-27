@@ -28,7 +28,6 @@ public class QuickInsulin {
 
     public PunctualQuickInsulinAdaptationResult computePunctualAdaptation(double glycemia, int acetoneLevel) throws IOException {
 
-        // FIXME IoC
         Acetone acetone = new Acetone(new AcetoneCriterionRepositoryJSonFileImpl());
         int acetoneAdaptation = acetone.computeAdaptation(acetoneLevel);
 
