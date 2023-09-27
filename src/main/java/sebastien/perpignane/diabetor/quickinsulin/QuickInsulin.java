@@ -47,7 +47,7 @@ public class QuickInsulin {
         );
     }
 
-    public int computeLongTermAdaptation(List<MealGlycemiaInterval> mealIntervals) {
+    public int computeLongTermAdaptation(List<MealGlycemiaMeasure> mealIntervals) {
 
         checkMealIntervalsValidity(mealIntervals);
 
@@ -74,7 +74,7 @@ public class QuickInsulin {
         return adaptationByTrend.get(IntervalTrend.STABLE);
     }
 
-    void checkMealIntervalsValidity(List<MealGlycemiaInterval> mealIntervals) throws IllegalArgumentException {
+    void checkMealIntervalsValidity(List<MealGlycemiaMeasure> mealIntervals) throws IllegalArgumentException {
         if (mealIntervals == null) {
             throw new IllegalArgumentException("mealIntervals cannot be null");
         }

@@ -1,10 +1,10 @@
 package sebastien.perpignane.diabetor.quickinsulin;
 
-public class MealGlycemiaInterval {
+public class MealGlycemiaMeasure {
 
     private final double glycemiaAfterMeal;
 
-    public MealGlycemiaInterval(double glycemiaAfterMeal) {
+    public MealGlycemiaMeasure(double glycemiaAfterMeal) {
         this.glycemiaAfterMeal = glycemiaAfterMeal;
     }
 

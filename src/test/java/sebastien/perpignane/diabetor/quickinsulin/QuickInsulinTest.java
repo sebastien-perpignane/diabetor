@@ -73,7 +73,7 @@ class QuickInsulinTest {
 
         assertThat(adaptationResult.getAdaptation())
             .isEqualTo(-1);
-        assertThat(adaptationResult.isEndOfMeal())
+        assertThat(adaptationResult.endOfMeal())
             .isTrue();
 
     }
@@ -92,10 +92,10 @@ class QuickInsulinTest {
     @Test
     void testComputeLongTermAdaptation_noAdaptation_goodTrend() {
 
-        List<MealGlycemiaInterval> intervals = List.of(
-            new MealGlycemiaInterval(1.2),
-            new MealGlycemiaInterval(1.4),
-            new MealGlycemiaInterval(0.8)
+        List<MealGlycemiaMeasure> intervals = List.of(
+            new MealGlycemiaMeasure(1.2),
+            new MealGlycemiaMeasure(1.4),
+            new MealGlycemiaMeasure(0.8)
         );
 
         int longTermAdaptation = quickInsulin.computeLongTermAdaptation(intervals);
@@ -107,10 +107,10 @@ class QuickInsulinTest {
     @Test
     void testComputeLongTermAdaptation_noAdaptation_noTrend() {
 
-        List<MealGlycemiaInterval> intervals = List.of(
-                new MealGlycemiaInterval(1.6),
-                new MealGlycemiaInterval(0.6),
-                new MealGlycemiaInterval(0.8)
+        List<MealGlycemiaMeasure> intervals = List.of(
+                new MealGlycemiaMeasure(1.6),
+                new MealGlycemiaMeasure(0.6),
+                new MealGlycemiaMeasure(0.8)
         );
 
         int longTermAdaptation = quickInsulin.computeLongTermAdaptation(intervals);
@@ -122,10 +122,10 @@ class QuickInsulinTest {
     @Test
     void testComputeLongTermAdaptation_adaptationUp() {
 
-        List<MealGlycemiaInterval> intervals = List.of(
-                new MealGlycemiaInterval(1.5),
-                new MealGlycemiaInterval(1.8),
-                new MealGlycemiaInterval(1.42)
+        List<MealGlycemiaMeasure> intervals = List.of(
+                new MealGlycemiaMeasure(1.5),
+                new MealGlycemiaMeasure(1.8),
+                new MealGlycemiaMeasure(1.42)
         );
 
         int longTermAdaptation = quickInsulin.computeLongTermAdaptation(intervals);
@@ -137,10 +137,10 @@ class QuickInsulinTest {
     @Test
     void testComputeLongTermAdaptation_adaptationDown() {
 
-        List<MealGlycemiaInterval> intervals = List.of(
-                new MealGlycemiaInterval(0.65),
-                new MealGlycemiaInterval(0.60),
-                new MealGlycemiaInterval(0.59)
+        List<MealGlycemiaMeasure> intervals = List.of(
+                new MealGlycemiaMeasure(0.65),
+                new MealGlycemiaMeasure(0.60),
+                new MealGlycemiaMeasure(0.59)
         );
 
         int longTermAdaptation = quickInsulin.computeLongTermAdaptation(intervals);
@@ -161,10 +161,10 @@ class QuickInsulinTest {
     @Test
     void testComputeLongTermAdaptation_invalidArgument_intervalsSize() {
 
-        List<MealGlycemiaInterval> intervals =
+        List<MealGlycemiaMeasure> intervals =
                 List.of(
-                    new MealGlycemiaInterval(0.65),
-                    new MealGlycemiaInterval(0.60)
+                    new MealGlycemiaMeasure(0.65),
+                    new MealGlycemiaMeasure(0.60)
                 );
 
         assertThatIllegalArgumentException().isThrownBy(
